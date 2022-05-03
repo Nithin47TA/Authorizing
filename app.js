@@ -252,6 +252,7 @@ app.route('/logout').get((req,res)=>{
   res.redirect("/login");
 })
 
-app.listen("4000", () =>
+let port=process.env.PORT||4000;
+app.listen(port, () =>
   console.log("\x1b[33m%s\x1b[0m", "%listening in port 4000")
 );
