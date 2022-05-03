@@ -30,9 +30,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-mongoose.connect("mongodb://localhost:27017/userDB", {
+mongoose.connect(process.env.MANGODB, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
+  useUnifiedTopology: true
 });
 mongoose.set('useCreateIndex', true);
 
@@ -184,7 +184,7 @@ app.route("/secret").get((req,res)=>{
     User.find({secret:{$ne: null}},(err,userWithSecret)=>{
       if(err) console.log(err);
       else{
-        console.log(userWithSecret[0].username);
+        console.log(userWithSecret[0]);
         if(userWithSecret) res.render("secrets",{secrets:userWithSecret});
         else res.render("secrets",{secrets:[]});
       }
@@ -236,10 +236,11 @@ app.route('/register').get((req,res)=>{
 }).post((req,res)=>{
   User.register({username:req.body.username},req.body.password,(err,user)=>{
     if(!err){
+      console.log("entered");
       passport.authenticate('local', { successRedirect: '/secret', failureRedirect: '/register' })(req,res,()=>{ res.redirect('/secret')});
     }
     else{
-      console.log('error occured');
+      console.log(err);
       console.log(req.body.username,req.body.password);
       res.redirect("/register");
     }
@@ -251,6 +252,6 @@ app.route('/logout').get((req,res)=>{
   res.redirect("/login");
 })
 
-app.listen("3000", () =>
-  console.log("\x1b[33m%s\x1b[0m", "%listening in port 3000")
+app.listen("4000", () =>
+  console.log("\x1b[33m%s\x1b[0m", "%listening in port 4000")
 );
